@@ -43,7 +43,7 @@ async function shopifyFetch(query, variables) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
+        "Shopify-Storefront-Private-Token": process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
         Accept: "application/json",
       },
       body: JSON.stringify({ query, variables: variables || {} }),
