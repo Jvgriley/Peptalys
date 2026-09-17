@@ -1,0 +1,10 @@
+{
+  "name": "peptalys-storefront",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Peptalys storefront — static frontend + Vercel serverless functions proxying the Shopify Storefront API.",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {}
+}
