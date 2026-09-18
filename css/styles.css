@@ -1,0 +1,126 @@
+/* Peptalys — bespoke layer on top of Tailwind utilities.
+   Single committed dark "lab-at-night" visual world — colours are painted
+   explicitly throughout (no reliance on prefers-color-scheme). */
+
+:root{
+  color-scheme: dark;
+  --bg: #070C18;
+  --grid-line: rgba(126,166,229,0.06);
+}
+
+*{ -webkit-tap-highlight-color: transparent; }
+
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *, *::before, *::after{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+body{
+  background:
+    radial-gradient(60rem 34rem at 88% -8%, rgba(47,143,255,0.16), transparent 60%),
+    radial-gradient(50rem 30rem at 8% 0%, rgba(109,209,255,0.10), transparent 55%),
+    var(--bg);
+  min-height: 100vh;
+}
+
+::selection{ background: #2F8FFF; color: #071022; }
+
+/* Scrollbar */
+::-webkit-scrollbar{ width: 10px; height: 10px; }
+::-webkit-scrollbar-track{ background: #070C18; }
+::-webkit-scrollbar-thumb{ background: #1B2C52; border-radius: 8px; border: 2px solid #070C18; }
+::-webkit-scrollbar-thumb:hover{ background: #2A4272; }
+
+/* Focus */
+a, button, input, select, textarea, [tabindex]{
+  outline-color: #6DD1FF;
+}
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{
+  outline: 2px solid #6DD1FF;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+h1,h2,h3,h4{ text-wrap: balance; letter-spacing: -0.01em; }
+
+.text-balance{ text-wrap: balance; }
+
+/* Fine background grid, used behind hero / dark editorial sections */
+.bg-labgrid{
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+
+/* Soft glow ring used on hero orbs / vial caps */
+.glow-ring{
+  box-shadow: 0 0 0 1px rgba(111,178,255,0.18), 0 0 60px 10px rgba(47,143,255,0.18);
+}
+
+/* Gradient text */
+.text-gradient{
+  background: linear-gradient(100deg, #EAF2FF 0%, #9FCBFF 35%, #6DD1FF 60%, #EAF2FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Card surface */
+.panel{
+  background: linear-gradient(180deg, rgba(20,38,74,0.55), rgba(11,20,40,0.65));
+  border: 1px solid rgba(126,166,229,0.16);
+  backdrop-filter: blur(6px);
+}
+
+/* Animated DNA strand (pure CSS/SVG driven, decorative, aria-hidden) */
+@keyframes driftY{
+  0%{ transform: translateY(0px); }
+  50%{ transform: translateY(-14px); }
+  100%{ transform: translateY(0px); }
+}
+.animate-drift{ animation: driftY 7s ease-in-out infinite; }
+
+@keyframes spinSlow{
+  from{ transform: rotate(0deg); }
+  to{ transform: rotate(360deg); }
+}
+.animate-spin-slow{ animation: spinSlow 26s linear infinite; }
+
+@keyframes pulseGlow{
+  0%,100%{ opacity: 0.55; }
+  50%{ opacity: 1; }
+}
+.animate-pulse-glow{ animation: pulseGlow 3.2s ease-in-out infinite; }
+
+@keyframes fadeUp{
+  from{ opacity:0; transform: translateY(14px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+.animate-fade-up{ animation: fadeUp 0.6s cubic-bezier(.2,.7,.2,1) both; }
+
+/* Marquee for trust strip */
+@keyframes marquee{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-50%); }
+}
+.animate-marquee{ animation: marquee 26s linear infinite; }
+
+/* Number input, no spinners, tabular */
+input[type=number]{ -moz-appearance: textfield; font-variant-numeric: tabular-nums; }
+input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+
+.tnum{ font-variant-numeric: tabular-nums; }
+
+/* Line clamp helpers */
+.clamp-2{ display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.clamp-3{ display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+/* Skip link */
+.skip-link{ position:absolute; left:1rem; top:-3rem; transition: top .15s ease; z-index:100; }
+.skip-link:focus{ top:1rem; }
+
+/* Toast container pointer handling */
+#toast-root{ pointer-events:none; }
+#toast-root > *{ pointer-events:auto; }

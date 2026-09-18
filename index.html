@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Peptalys</title>
+<meta name="description" content="Peptalys supplies UK-manufactured research peptides — Retatrutide, BPC-157, Tirzepatide, GHK-Cu and more — to laboratories and research bodies. Wholesale supply, UK delivery in 3–5 working days, research use only." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://peptalys.co.uk/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Peptalys" />
+<meta property="og:title" content="Peptalys — Wholesale Research Peptides" />
+<meta property="og:description" content="UK-manufactured research peptides, supplied wholesale. Quality. Supply. Progress." />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Peptalys",
+  "description": "UK wholesale supplier of high-purity research peptides for laboratories and research institutions.",
+  "slogan": "More Than Peptides",
+  "email": "info@peptalys.co.uk"
+}
+</script>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          ink: '#EAF2FF',
+          dim: '#93A6C9',
+          faint: '#5A6E93',
+          bg: '#070C18',
+          surface: '#0B1428',
+          surface2: '#101E3D',
+          surface3: '#14264A',
+          line: 'rgba(126,166,229,0.16)',
+          line2: 'rgba(126,166,229,0.28)',
+          accent: '#2F8FFF',
+          accent2: '#6DD1FF',
+          accentDeep: '#0A3D91',
+          gold: '#E8C27A',
+        },
+        fontFamily: {
+          display: ['Archivo', 'sans-serif'],
+          body: ['"IBM Plex Sans"', 'sans-serif'],
+          mono: ['"IBM Plex Mono"', 'monospace'],
+        },
+        boxShadow: {
+          glow: '0 0 0 1px rgba(111,178,255,0.14), 0 12px 40px -12px rgba(47,143,255,0.35)',
+          glowLg: '0 0 0 1px rgba(111,178,255,0.16), 0 30px 80px -20px rgba(47,143,255,0.45)',
+        },
+      },
+    },
+  };
+</script>
+
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body class="bg-bg text-ink font-body antialiased">
+
+<div id="root">
+  <div class="fixed inset-0 flex items-center justify-center bg-bg">
+    <div class="flex flex-col items-center gap-4 px-6 text-center">
+      <div id="loading-spinner" class="h-10 w-10 rounded-full border-2 border-line2 border-t-accent animate-spin"></div>
+      <p id="loading-label" class="font-mono text-xs tracking-[0.2em] text-dim uppercase">Loading Peptalys</p>
+      <div id="loading-fallback" hidden class="mt-2 max-w-sm">
+        <p class="text-sm text-ink">This is taking longer than expected.</p>
+        <p class="mt-2 text-xs leading-relaxed text-dim">A required script may be blocked by your network, an ad-blocker, or a privacy extension. Try disabling content blockers for this page, or reloading.</p>
+        <button onclick="window.location.reload()" class="mt-4 rounded-full bg-accent px-5 py-2 text-xs font-semibold text-white">Reload page</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Defensive loading fallback: if the app hasn't mounted within a few
+  // seconds (a CDN script blocked by a network/ad-blocker, or a slow
+  // connection), replace the endless spinner with an explanation instead
+  // of leaving the visitor staring at a page that looks broken.
+  window.addEventListener("error", function (e) {
+    console.error("Peptalys load error:", e.message, e.filename);
+  });
+  setTimeout(function () {
+    if (!window.__peptalysMounted) {
+      var fb = document.getElementById("loading-fallback");
+      var spinner = document.getElementById("loading-spinner");
+      var label = document.getElementById("loading-label");
+      if (fb) fb.hidden = false;
+      if (spinner) spinner.style.display = "none";
+      if (label) label.textContent = "Peptalys";
+    }
+  }, 6000);
+</script>
+
+<script src="js/app.compiled.js"></script>
+</body>
+</html>
