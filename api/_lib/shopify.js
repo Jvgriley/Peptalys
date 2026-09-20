@@ -10,44 +10,44 @@
 
    AUTHENTICATION — read this before changing the header below.
    --------------------------------------------------------------------------
-   Shopify's Storefront GraphQL API has exactly ONE header for a normal
-   Storefront API access token (the kind issued directly by a Headless sales
-   channel, or by a custom app's "Storefront API" access scope):
+   UPDATED 2026-09-20, based on direct empirical testing against this store
+   (wgcien-is.myshopify.com), not just documentation:
 
-       X-Shopify-Storefront-Access-Token: <token>
+   This store's Headless sales channel issues TWO distinct Storefront API
+   tokens, and each one only authenticates with its own header:
 
-   This is true whether that token is flagged "public" (safe for a browser,
-   CORS-enabled) or "private" (server-only) in Shopify admin — the "public
-   vs private" distinction changes where the token is allowed to be used,
-   not which header carries it. Every request in this file is made
-   server-side only, so the token is a private/server-only token used with
-   the standard header, which is exactly the officially documented pairing:
-   https://shopify.dev/docs/api/storefront#authentication
+     - "Public access token" (unprefixed, e.g. 646c84df...)
+       -> header: X-Shopify-Storefront-Access-Token
 
-   There is a SEPARATE, different header — `Shopify-Storefront-Private-Token`
-   — but that one is documented specifically for *delegate access tokens*, a
-   distinct token type minted at request time via the Admin API's
-   `delegateAccessTokenCreate` mutation (see
-   https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/use-delegate-tokens).
-   A token generated directly through the Headless sales channel (or a
-   custom app) is NOT a delegate token, so sending it via
-   `Shopify-Storefront-Private-Token` returns 401/403 even though the token
-   itself is valid — this is a well-documented source of confusion (see e.g.
-   https://community.shopify.com/t/storefront-api-generation-of-delegate-access-token-shopify-storefront-private-token/133197
-   and https://community.shopify.com/t/usage-of-access-token-with-shopify-storefront-private-token/191445),
-   and is the most likely explanation if this integration was ever switched
-   to that header and started failing.
+     - "Private access token" (prefixed `shpat_...`, server-only)
+       -> header: Shopify-Storefront-Private-Token
 
-   Do not add a second code path for `Shopify-Storefront-Private-Token`
-   "just in case" — that reintroduces exactly the inconsistency this file
-   exists to prevent. If a future token genuinely is a delegate token, that
-   is a deliberate, separate integration (delegateAccessTokenCreate must be
-   called first) and deserves its own explicit function, not a silent
-   header swap here.
+   This was confirmed with matched curl tests straight against Shopify,
+   bypassing Vercel entirely: the public token authenticated successfully
+   with X-Shopify-Storefront-Access-Token, while the private (shpat_) token
+   returned a blank-message 401 UNAUTHORIZED with that same header, on every
+   API version tried, with correct domain/permissions/plan/password
+   settings all independently verified. The private token then authenticated
+   successfully the moment it was sent with Shopify-Storefront-Private-Token
+   instead. This reverses an earlier assumption in this file (that
+   Shopify-Storefront-Private-Token was only for a separate "delegate access
+   token" type per https://shopify.dev/docs/api/storefront#authentication) —
+   that may still be true for other stores/token vintages, but it does not
+   match this store's actual live behavior, and the live behavior wins.
+
+   Since every request in this file runs server-side only and always uses
+   the SHOPIFY_STOREFRONT_ACCESS_TOKEN env var (which holds the private,
+   shpat_-prefixed token), every request in this file uses
+   Shopify-Storefront-Private-Token. If that env var is ever repointed at an
+   unprefixed "public" token instead, this header would need to change back
+   to X-Shopify-Storefront-Access-Token — the two are not interchangeable,
+   confirmed by the tests above. If auth ever starts failing again after a
+   token rotation, re-run the same matched-header curl test before assuming
+   the header is still correct.
    ========================================================================== */
 
 const REQUIRED_ENV = ["SHOPIFY_STORE_DOMAIN", "SHOPIFY_STOREFRONT_ACCESS_TOKEN", "SHOPIFY_STOREFRONT_API_VERSION"];
-const AUTH_HEADER_NAME = "X-Shopify-Storefront-Access-Token";
+const AUTH_HEADER_NAME = "Shopify-Storefront-Private-Token";
 const TOKEN_TYPE_EXPECTED = "Storefront API access token (public or private/server-only) issued by the Headless sales channel or a custom app's Storefront API scope — NOT a delegate access token.";
 
 function envPresenceMap() {
@@ -130,9 +130,11 @@ function scrubSecrets(text) {
 
 /**
  * Low-level authenticated POST to the Shopify Storefront GraphQL endpoint.
- * Server-side only. Reads the token from process.env and sends it via
- * X-Shopify-Storefront-Access-Token — see the file header comment above for
- * why that header, and only that header, is used here.
+ * Server-side only. Reads the (private, shpat_-prefixed) token from
+ * process.env and sends it via Shopify-Storefront-Private-Token — see the
+ * file header comment above for the empirical testing that confirmed this
+ * is the correct header for this store's private token, and why the other
+ * header (X-Shopify-Storefront-Access-Token) is for the public token only.
  *
  * `meta.route` is purely a label (e.g. "/api/products") attached to any
  * thrown error's diagnostics, so a server-side log line or an error
