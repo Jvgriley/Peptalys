@@ -454,7 +454,7 @@ function normalizeCart(cart) {
 /* Public API used by the /api/*.js route handlers                       */
 /* -------------------------------------------------------------------- */
 
-async function getProducts({ first = 48, collectionHandle, route = "/api/products" } = {}) {
+async function getProducts({ first = 100, collectionHandle, route = "/api/products" } = {}) {
   if (collectionHandle) {
     const query = `
       query CollectionProducts($handle: String!, $first: Int!) {
