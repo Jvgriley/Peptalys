@@ -9,7 +9,7 @@ module.exports = withErrorHandling(async function handler(req, res) {
   }
   const url = new URL(req.url, "http://localhost");
   const collectionHandle = url.searchParams.get("collection") || undefined;
-  const first = Math.min(Number(url.searchParams.get("first")) || 48, 100);
+  const first = Math.min(Number(url.searchParams.get("first")) || 100, 100);
 
   const { products, collection } = await getProducts({ first, collectionHandle, route: "/api/products" });
   const body = { products, collection: collection || null };
