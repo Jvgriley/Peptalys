@@ -257,7 +257,7 @@ async function testShopQuery() {
 
 async function testMinimalProductsQuery() {
   const data = await shopifyFetch(
-    `query { products(first: 5) { nodes { id title handle } } }`,
+    `query { products(first: 100) { nodes { id title handle } } }`,
     {},
     { route: "/api/diagnostics:products" }
   );
