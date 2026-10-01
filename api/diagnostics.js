@@ -9,7 +9,7 @@ const { sendJson, sanitizeDiagnostics } = require("./_lib/respond");
 
      1. env var presence + endpoint construction (no network call)
      2. a minimal `{ shop { name } }` query — proves auth + connectivity
-     3. a minimal `products(first: 5) { nodes { id title handle } }` query
+     3. a minimal `products(first: 100) { nodes { id title handle } }` query
      4. (only if 2 and 3 both pass) a note that the full production
         /api/products and /api/collections queries should now be tested
 
@@ -89,7 +89,7 @@ module.exports = async function handler(req, res) {
   }
 
   // ---- Step 3: minimal products query ----
-  const productsStep = { step: 3, name: "Minimal products query: query { products(first: 5) { nodes { id title handle } } }" };
+  const productsStep = { step: 3, name: "Minimal products query: query { products(first: 100) { nodes { id title handle } } }" };
   try {
     const nodes = await shopify.testMinimalProductsQuery();
     productsStep.pass = true;
