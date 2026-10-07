@@ -947,16 +947,16 @@ function ProductCard({ product, className }) {
                 React.createElement(Badge, { tone: avail.tone === "ok" ? "ok" : avail.tone === "warn" ? "warn" : "danger" }, avail.label)))));
 }
 /* ---- quantity stepper ---------------------------------------------------*/
-function QuantityStepper({ value, onChange, min = 1, max = 999, size = "md" }) {
+function QuantityStepper({ value, onChange, min = 10, max = 1000, size = "md" }) {
     const h = size === "sm" ? "h-9" : "h-11";
     return (React.createElement("div", { className: cx("inline-flex items-center rounded-full border border-line2 bg-surface2", h) },
-        React.createElement("button", { type: "button", "aria-label": "Decrease quantity", onClick: () => onChange(Math.max(min, value - 1)), className: "flex h-full w-9 items-center justify-center text-dim hover:text-accent2 disabled:opacity-30", disabled: value <= min },
+        React.createElement("button", { type: "button", "aria-label": "Decrease quantity", onClick: () => onChange(Math.max(min, value - 10)), className: "flex h-full w-9 items-center justify-center text-dim hover:text-accent2 disabled:opacity-30", disabled: value <= min },
             React.createElement(Icon, { name: "minus", className: "h-3.5 w-3.5" })),
-        React.createElement("input", { "aria-label": "Quantity", type: "number", value: value, min: min, max: max, onChange: (e) => {
+        React.createElement("input", { "aria-label": "Quantity", type: "number", value: value, min: min, max: max, step: 10 onChange: (e) => {
                 const v = parseInt(e.target.value, 10);
                 onChange(Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : min);
             }, className: "w-10 bg-transparent text-center font-mono text-sm text-ink outline-none" }),
-        React.createElement("button", { type: "button", "aria-label": "Increase quantity", onClick: () => onChange(Math.min(max, value + 1)), className: "flex h-full w-9 items-center justify-center text-dim hover:text-accent2 disabled:opacity-30", disabled: value >= max },
+        React.createElement("button", { type: "button", "aria-label": "Increase quantity", onClick: () => onChange(Math.min(max, value + 10)), className: "flex h-full w-9 items-center justify-center text-dim hover:text-accent2 disabled:opacity-30", disabled: value >= max },
             React.createElement(Icon, { name: "plus", className: "h-3.5 w-3.5" }))));
 }
 /* ---- trust strip ---------------------------------------------------------*/
