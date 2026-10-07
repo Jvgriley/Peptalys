@@ -106,6 +106,13 @@
   }, 6000);
 </script>
 
+<script>
+  // Always start a new page/route at the top
+  window.addEventListener("hashchange", function () {
+    window.scrollTo(0, 0);
+  });
+</script>
+  
 <script src="js/app.compiled.js"></script>
 </body>
 </html>
